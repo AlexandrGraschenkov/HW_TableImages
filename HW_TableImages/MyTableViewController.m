@@ -12,6 +12,7 @@
 
 @interface MyTableViewController ()
 {
+    DataManager *manager;
     NSArray *dataArr;
 }
 @end
@@ -22,6 +23,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    manager = [DataManager sharedInstance];
+    [manager asyncListOfFruits:^void (NSArray *result){
+        dataArr = result;
+        [[self tableView] reloadData];
+    }];
 }
 
 
@@ -29,21 +35,34 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
+    
+    
+    
     // Return the number of rows in the section.
-    return 0;
+    return [dataArr count];
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableViewCell" forIndexPath:indexPath];
+    cell.titleLabel.text = [[dataArr objectAtIndex:indexPath.row] objectForKey:@"title"];
+    [manager asyncGetImage:[[dataArr objectAtIndex:indexPath.row] objectForKey:@"thumb_img"] complection:
+     ^void (UIImage *img)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^(void)
+                       {
+                           cell.imgView.image = img;
+                           [cell.activity setHidden:YES];
+                       }
+                       );
+        
+    }];
     
     // Configure the cell...
     
     return cell;
 }
-*/
+
 
 
 @end
