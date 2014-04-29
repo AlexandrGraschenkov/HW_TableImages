@@ -22,7 +22,7 @@
     return _singleton;
 }
 
-- (void)asyncListOfFruits:(void(^)(NSArray* arr))complection
+- (void)asyncListOfFruits:(void(^)(NSArray* arr))completion
 {
     float delay = 0.5 + 1.5 * ((double)arc4random() / ARC4RANDOM_MAX);
     
@@ -34,18 +34,18 @@
                             @{@"title" : @"Ананас", @"thumb_img" : @"Ananas_tb.png"}];
         result = [result arrayByAddingObjectsFromArray:result];
         result = [result arrayByAddingObjectsFromArray:result];
-        complection(result);
+        completion(result);
     });
 }
 
-- (void)asyncGetImage:(NSString*)imgName complection:(void(^)(UIImage* img))complection
+- (void)asyncGetImage:(NSString*)imgName complection:(void(^)(UIImage* img))completion
 {
     float delay = 0.5 + 1.5 * ((double)arc4random() / ARC4RANDOM_MAX);
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
     {
         UIImage *img = [UIImage imageNamed:imgName];
-        complection(img);
+        completion(img);
     });
 }
 
