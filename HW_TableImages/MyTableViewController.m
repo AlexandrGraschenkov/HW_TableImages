@@ -52,6 +52,7 @@
     cell.titleLabel.text=[dataArr[indexPath.row] objectForKey:@"title"];
     cell.activity.hidden=NO;
     [cell.activity startAnimating];
+    cell.imgView.image=nil;
     [[DataManager sharedInstance] asyncGetImage:[dataArr[indexPath.row] objectForKey:@"thumb_img"] complection:^(UIImage *img){
         dispatch_async(dispatch_get_main_queue(), ^{
             NSIndexPath *index=indexPath;
