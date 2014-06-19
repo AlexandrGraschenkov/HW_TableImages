@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[MyTableViewController tableView:cellForRowAtIndexPath:]:MyTableViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[dataArr objectAtIndex:indexPath.item]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[MyTableViewController viewDidLoad]_block_invoke:MyTableViewController.m">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
