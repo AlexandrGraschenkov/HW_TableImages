@@ -26,8 +26,9 @@
     manager = [DataManager sharedInstance];
     [manager asyncListOfFruits:^void (NSArray *result){
         dataArr = result;
-        [[self tableView] reloadData];
-    }];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [[self tableView] reloadData];
+        });}];
 }
 
 
@@ -48,7 +49,9 @@
     cell.titleLabel.text = [[dataArr objectAtIndex:indexPath.row] objectForKey:@"title"];
     [manager asyncGetImage:[[dataArr objectAtIndex:indexPath.row] objectForKey:@"thumb_img"] complection:
      ^void (UIImage *img)
+     
     {
+        TableViewCell *cell = (TableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
         dispatch_async(dispatch_get_main_queue(), ^(void)
                        {
                            cell.imgView.image = img;
