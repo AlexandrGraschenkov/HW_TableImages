@@ -13,6 +13,7 @@
 @interface MyTableViewController ()
 {
     NSArray *dataArr;
+    DataManager *data;
 }
 @end
 
@@ -24,26 +25,40 @@
     [super viewDidLoad];
 }
 
-
-#pragma mark - Table view data source
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(void)viewWillAppear:(BOOL)animated
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    [super viewWillAppear:animated];
+    data = [DataManager sharedInstance];
+    [data asyncListOfFruits:^(NSArray *arr) {
+        dataArr = arr;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+    }];
 }
 
-/*
+#pragma mark - Table view data source
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return dataArr.count;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableViewCell" forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
+    cell.titleLabel.text = dataArr[indexPath.row][@"title"];
+    [cell.activity startAnimating];
+    cell.imgView.image = nil;
+    [data asyncGetImage:dataArr[indexPath.row][@"thumb_img"] complection:^(UIImage *img) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            TableViewCell *cell = (TableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+            cell.imgView.image = img;
+            cell.activity.hidesWhenStopped = YES;
+            [cell.activity stopAnimating];
+        });
+    }];
     return cell;
 }
-*/
 
 
 @end
