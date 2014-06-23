@@ -22,6 +22,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[DataManager sharedInstance] asyncListOfFruits:^(NSArray *array) {
+        dataArr = array;
+        dispatch_async(dispatch_get_main_queue(), ^{[self.tableView reloadData];});
+    }];
 }
 
 
@@ -29,21 +33,31 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
+//#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return dataArr.count;
 }
 
-/*
+///*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableViewCell" forIndexPath:indexPath];
     
     // Configure the cell...
-    
+    cell.titleLabel.text = [dataArr objectAtIndex:indexPath.row][@"title"];
+    [cell.activity startAnimating];
+    cell.imgView.image = nil;
+    [[DataManager sharedInstance] asyncGetImage:[dataArr objectAtIndex:indexPath.row][@"thumb_img"] complection:^(UIImage *img) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            TableViewCell *cell = (TableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+            cell.imgView.image = img;
+            [cell.activity setHidesWhenStopped:true];
+            [cell.activity stopAnimating];
+        });
+    }];
     return cell;
 }
-*/
+//*/
 
 
 @end
